@@ -1,9 +1,7 @@
 from linked_list import SinglyLinkedList, Node
+from doubly_linked_list_test import get_simple_instance
 
 if __name__ == "__main__":
-    meh = SinglyLinkedList(Node(100))
-    meh.append(Node(200))
-    meh.append(Node(300))
-    meh.insert(Node(1000), 2)
-    meh.insert(Node(2000), 3)
-    print(meh)
+    linked = get_simple_instance()
+    linked.append(Node(200))
+    print(str(list(linked)))
