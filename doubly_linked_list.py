@@ -12,6 +12,11 @@ class DoublyLinkedList:
             pass
         node.set_next(node_to_append)
 
+    def prepend(self, node):
+        previous_first_node = self.first_node
+        self.first_node = node
+        self.first_node.set_next(previous_first_node)
+
     def insert(self, node_to_insert, at_index):
         if at_index == 0 and self.first_node is None:
             self.first_node = node_to_insert
@@ -68,6 +73,8 @@ class Node:
         self.previous = None
         self.next = None
 
-    def set_next(self, node):
+    def set_next(self, node = None):
         self.next = node
-        node.previous = self
+
+        if node is not None:
+            node.previous = self

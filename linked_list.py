@@ -12,6 +12,11 @@ class SinglyLinkedList:
         else:
             last_node.next = node
 
+    def prepend(self, node):
+        previous_first_node = self.first_node
+        self.first_node = node
+        node.next = previous_first_node
+
     def insert(self, node_to_insert, at_index):
         if at_index == 0:
             node_to_insert.next = self.first_node

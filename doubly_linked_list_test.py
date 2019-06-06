@@ -151,3 +151,24 @@ class DoublyLinkedTestCase(TestCase):
 
         with self.assertRaises(ValueError):
             linked.remove(0)
+
+    def test_prepend_adds_an_element_at_the_beginning(self):
+        first_node = Node(100)
+        node = Node(1000)
+        linked = DoublyLinkedList(first_node)
+        linked.prepend(node)
+
+        self.assertEqual(linked.as_list_of_values(), [1000, 100])
+        self.assertIs(linked.first_node, node)
+        self.assertIs(linked.first_node.next, first_node)
+        self.assertIs(first_node.previous, node)
+
+    def test_prepend_adds_an_element_at_the_beginning_even_without_a_first_node(self):
+        linked = DoublyLinkedList()
+        node = Node(1000)
+        linked.prepend(node)
+
+        self.assertEqual(linked.as_list_of_values(), [1000])
+        self.assertIs(linked.first_node, node)
+        self.assertIs(linked.first_node.next, None)
+        self.assertIs(linked.first_node.previous, None)

@@ -108,6 +108,18 @@ class SinglyLinkedTestCase(TestCase):
         with self.assertRaises(ValueError):
             linked.remove(0)
 
+    def test_prepend_adds_an_element_at_the_beginning(self):
+        linked = SinglyLinkedList(Node(100))
+        linked.prepend(Node(1000))
+
+        self.assertValues(linked, [1000, 100])
+
+    def test_prepend_adds_an_element_at_the_beginning_even_without_a_first_node(self):
+        linked = SinglyLinkedList()
+        linked.prepend(Node(1000))
+
+        self.assertValues(linked, [1000])
+
     def assertValues(self, linked, values):
         self.assertEqual(linked.as_list_of_values(), values)
 
