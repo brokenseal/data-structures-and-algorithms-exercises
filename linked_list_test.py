@@ -1,5 +1,5 @@
 from unittest import TestCase
-from linked_list import SinglyLinkedList, Node
+from linked_list import SinglyLinkedList, Node, StackedSinglyLinkedList
 
 
 class SinglyLinkedTestCase(TestCase):
@@ -86,6 +86,15 @@ class SinglyLinkedTestCase(TestCase):
 
         self.assertValues(linked, [])
 
+    def test_remove_at_the_beginning_with_multiple_values(self):
+        linked = SinglyLinkedList(Node(100))
+        linked.append(Node(200))
+        linked.append(Node(300))
+        linked.append(Node(400))
+        linked.remove(0)
+
+        self.assertValues(linked, [200, 300, 400])
+
     def test_remove_at_the_end(self):
         linked = SinglyLinkedList(Node(100))
         linked.append(Node(200))
@@ -122,6 +131,37 @@ class SinglyLinkedTestCase(TestCase):
 
     def assertValues(self, linked, values):
         self.assertEqual(linked.as_list_of_values(), values)
+
+
+class TestStackedSinglyLinkedList(TestCase):
+    def test_push_adds_as_first_node(self):
+        linked = StackedSinglyLinkedList(Node(100))
+        linked.push(Node(200))
+
+        self.assertEqual(linked.as_list_of_values(), [200, 100])
+
+    def test_push_adds_as_first_node_with_multiple_values(self):
+        linked = StackedSinglyLinkedList(Node(100))
+        linked.push(Node(200))
+        linked.push(Node(300))
+        linked.push(Node(400))
+
+        self.assertEqual(linked.as_list_of_values(), [400, 300, 200, 100])
+
+    def test_pop_removes_first_node(self):
+        linked = StackedSinglyLinkedList(Node(100))
+        linked.pop()
+
+        self.assertEqual(linked.as_list_of_values(), [])
+
+    def test_pop_removes_first_node_with_multiple_nodes(self):
+        linked = StackedSinglyLinkedList(Node(100))
+        linked.push(Node(200))
+        linked.push(Node(300))
+        linked.push(Node(400))
+        linked.pop()
+
+        self.assertEqual(linked.as_list_of_values(), [300, 200, 100])
 
 
 class TestUtilitiesMethods(TestCase):

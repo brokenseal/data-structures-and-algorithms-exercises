@@ -36,13 +36,13 @@ class SinglyLinkedList:
         for node, previous_node, index in self:
             if index != at_index:
                 continue
-            if node is None:
-                raise ValueError("Index too small")
+            # if node is None:
+            #     raise ValueError("Index too small")
             if previous_node is None:
-                self.first_node = None
+                self.first_node = self.first_node.next
                 break
             previous_node.next = node.next
-            break
+            return node
         else:
             raise ValueError("Index too big")
 
@@ -90,4 +90,12 @@ class Node:
         return str(self.value)
 
     def __eq__(self, cmp):
-        return isinstance(self.__class__, cmp) and self.value == cmp.value and self.next == cmp.next
+        return isinstance(cmp, self.__class__) and self.value == cmp.value and self.next == cmp.next
+
+
+class StackedSinglyLinkedList(SinglyLinkedList):
+    def push(self, node):
+        return self.prepend(node)
+
+    def pop(self):
+        return self.remove(0)
