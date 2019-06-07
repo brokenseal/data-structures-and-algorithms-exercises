@@ -39,8 +39,9 @@ class SinglyLinkedList:
             # if node is None:
             #     raise ValueError("Index too small")
             if previous_node is None:
+                removed = self.first_node
                 self.first_node = self.first_node.next
-                break
+                return removed
             previous_node.next = node.next
             return node
         else:
