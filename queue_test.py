@@ -1,5 +1,5 @@
 from unittest import TestCase
-from queue import SinglyLinkedListQueue, ArrayQueue
+from queue import SinglyLinkedListQueue, ArrayQueue, PriorityQueue
 
 
 class QueueTest(TestCase):
@@ -74,3 +74,15 @@ class QueueTest(TestCase):
 
 class ArrayQueueTest(QueueTest):
     QueueClass = ArrayQueue
+
+
+class PriorityQueueTest(QueueTest):
+    QueueClass = PriorityQueue
+
+    def test_enqueue_operation_respects_priority(self):
+        queue = self.QueueClass(5)
+        queue.enqueue(10)
+        queue.enqueue(20)
+        queue.enqueue(1)
+
+        self.assertEqual(queue.as_list_of_values(), [1, 10, 20])

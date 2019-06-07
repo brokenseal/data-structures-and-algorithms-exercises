@@ -48,3 +48,9 @@ class ArrayQueue:
 
     def as_list_of_values(self):
         return [node.value for node in self._queue]
+
+
+class PriorityQueue(ArrayQueue):
+    def enqueue(self, value):
+        super(PriorityQueue, self).enqueue(value)
+        self._queue.sort(key=lambda node: node.value)
