@@ -1,10 +1,40 @@
-class Node:
+class BinaryTreeNode:
     def __init__(self, value, parent=None):
         self.value = value
         self.parent = parent
         self.left = None
         self.right = None
 
+    def pre_order(self):
+        # root, left, right
+        result = [self.value]
+        if self.left is not None:
+            result.extend(self.left.pre_order())
+        if self.right is not None:
+            result.extend(self.right.pre_order())
+        return result
+
+    def in_order(self):
+        # left, root, right
+        result = []
+        if self.left is not None:
+            result.extend(self.left.in_order())
+        result.append(self.value)
+        if self.right is not None:
+            result.extend(self.right.in_order())
+        return result
+
+    def post_order(self):
+        # left, right, root
+        result = []
+        if self.left is not None:
+            result.extend(self.left.post_order())
+        if self.right is not None:
+            result.extend(self.right.post_order())
+        result.append(self.value)
+        return result
+
+class BinarySearchTreeNode(BinaryTreeNode):
     def insert(self, node):
         if node.value == self.value:
             raise ValueError()
@@ -34,37 +64,54 @@ class Node:
             return None, depth
         return self.right.search(value, depth)
 
-    def as_list_of_values(self):
-        result = []
-
-        if self.left is not None:
-            result.extend(self.left.as_list_of_values())
-
-        result.append(self.value)
-
-        if self.right is not None:
-            result.extend(self.right.as_list_of_values())
-
-        return result
-
-    def pre_order(self):
-        result = [self.value]
-        if self.left is not None:
-            result.extend(self.left.pre_order())
-        if self.right is not None:
-            result.extend(self.right.pre_order())
-        return result
-
 
 class BinaryTree:
+    Node = BinaryTreeNode
+
     def __init__(self):
         self.root = None
 
+    def breadth_first(self):
+        if self.root is None:
+            return [], 0
+        current_nodes = [self.root]
+        result = []
+        depth = -1
+        while len(current_nodes) != 0:
+            depth += 1
+            result.extend([node.value for node in current_nodes])
+            next_nodes = []
+            for node in current_nodes:
+                if node.left is not None:
+                    next_nodes.append(node.left)
+                if node.right is not None:
+                    next_nodes.append(node.right)
+            current_nodes = next_nodes
+        return result, depth
+
+    def pre_order(self):
+        if self.root is None:
+            return []
+        return self.root.pre_order()
+
+    def in_order(self):
+        if self.root is None:
+            return []
+        return self.root.in_order()
+
+    def post_order(self):
+        if self.root is None:
+            return []
+        return self.root.post_order()
+
+class BinarySearchTree(BinaryTree):
+    Node = BinarySearchTreeNode
+
     def insert(self, value):
         if self.root is None:
-            self.root = Node(value)
+            self.root = self.Node(value)
             return
-        self.root.insert(Node(value))
+        self.root.insert(self.Node(value))
 
     def insert_multiple_values(self, values):
         for value in values:
@@ -98,34 +145,6 @@ class BinaryTree:
                 root.value = min_value
                 root.right = self.delete(min_value, root.right)
         return root
-
-    def as_list_of_values(self):
-        if self.root is None:
-            return []
-        return self.root.as_list_of_values()
-
-    def breadth_first(self):
-        if self.root is None:
-            return [], 0
-        current_nodes = [self.root]
-        result = []
-        depth = -1
-        while len(current_nodes) != 0:
-            depth += 1
-            result.extend([node.value for node in current_nodes])
-            next_nodes = []
-            for node in current_nodes:
-                if node.left is not None:
-                    next_nodes.append(node.left)
-                if node.right is not None:
-                    next_nodes.append(node.right)
-            current_nodes = next_nodes
-        return result, depth
-
-    def pre_order(self):
-        if self.root is None:
-            return []
-        return self.root.pre_order()
 
 
 def calculate_min_value(root):
