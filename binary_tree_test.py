@@ -30,7 +30,7 @@ class BinaryTreeNodeTest(TestCase):
         self.assertEqual(node.value, 10)
 
 
-class BinaryTreeTestcase(TestCase):
+class BinaryTreeTestCase(TestCase):
     def test_has_root_node_attribute(self):
         bt = BinaryTree()
 
@@ -146,10 +146,118 @@ class BinaryTreeTestcase(TestCase):
         self.assertEqual(node.value, 7)
         self.assertEqual(depth, 2)
 
-    def test_third_second_use_case(self):
+    def test_search_third_use_case(self):
         bt = BinaryTree()
         bt.insert_multiple_values([10, 20, 22, 3, 7, 4, 32, 900])
         node, depth = bt.search(4)
 
         self.assertEqual(node.value, 4)
         self.assertEqual(depth, 3)
+
+    def test_deletion_first_use_case(self):
+        bt = BinaryTree()
+        bt.insert_multiple_values([10, 20, 22, 3, 7, 4, 32, 900])
+        node, depth = bt.search(4)
+
+        self.assertEqual(node.value, 4)
+        self.assertEqual(depth, 3)
+
+        bt.delete(4)
+
+        node, depth = bt.search(4)
+
+        self.assertIsNone(node)
+        self.assertEqual(bt.as_list_of_values(), [
+                         3, 7, 10, 20, 22, 32, 900])
+
+    def test_deletion_root(self):
+        bt = BinaryTree()
+        bt.insert_multiple_values([10, 20, 22, 3, 7, 4, 32, 900])
+        node, depth = bt.search(10)
+
+        self.assertEqual(node.value, 10)
+        self.assertEqual(depth, 0)
+
+        bt.delete(10)
+
+        node, _ = bt.search(10)
+
+        self.assertIsNone(node)
+        self.assertEqual(bt.as_list_of_values(), [
+                         3, 4, 7, 20, 22, 32, 900])
+
+    def test_deletion_leaf(self):
+        bt = BinaryTree()
+        bt.insert_multiple_values([10, 20, 22, 3, 7, 4, 32, 900])
+        node, depth = bt.search(900)
+
+        self.assertEqual(node.value, 900)
+        self.assertEqual(depth, 4)
+
+        bt.delete(900)
+
+        node, _ = bt.search(900)
+
+        self.assertIsNone(node)
+        self.assertEqual(bt.as_list_of_values(), [
+                         3, 4, 7, 10, 20, 22, 32])
+
+
+class BinaryTreeUtilityMethodsTestCase(TestCase):
+    def test_as_list_of_values(self):
+        bt = BinaryTree()
+        bt.insert_multiple_values([10, 20, 22, 3, 7, 4, 32, 900])
+
+        self.assertEqual(bt.as_list_of_values(), [
+                         3, 4, 7, 10, 20, 22, 32, 900])
+
+    def test_breadth_first(self):
+        bt = BinaryTree()
+        bt.root = Node(1)
+        bt.root.left = Node(2)
+        bt.root.left.left = Node(4)
+        bt.root.left.right = Node(5)
+        bt.root.right = Node(3)
+        bt.root.right.right = Node(7)
+        bt.root.right.left = Node(6)
+        result, depth = bt.breadth_first()
+
+        self.assertEqual(result, [1, 2, 3, 4, 5, 6, 7])
+        self.assertEqual(depth, 2)
+
+    def test_breadth_first_empty_tree(self):
+        bt = BinaryTree()
+        result, depth = bt.breadth_first()
+
+        self.assertEqual(result, [])
+        self.assertEqual(depth, 0)
+
+    def test_breadth_first_mostly_left_side_nodes(self):
+        bt = BinaryTree()
+        bt.root = Node(1)
+        bt.root.left = Node(2)
+        bt.root.right = Node(3)
+
+        bt.root.left.left = Node(4)
+        bt.root.left.right = Node(5)
+        bt.root.right.right = Node(7)
+
+        bt.root.left.left.left = Node(6)
+        bt.root.left.left.left.left = Node(8)
+
+        result, depth = bt.breadth_first()
+
+        self.assertEqual(result, [1, 2, 3, 4, 5, 7, 6, 8])
+        self.assertEqual(depth, 4)
+
+    def test_pre_order(self):
+        bt = BinaryTree()
+        bt.root = Node(1)
+        bt.root.left = Node(2)
+        bt.root.left.left = Node(4)
+        bt.root.left.right = Node(5)
+        bt.root.right = Node(3)
+        bt.root.right.right = Node(7)
+        bt.root.right.left = Node(6)
+
+        self.assertEqual(bt.pre_order(), [1, 2, 4, 5, 3, 6, 7])
