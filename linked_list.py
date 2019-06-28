@@ -1,9 +1,10 @@
 class SinglyLinkedList:
-    def __init__(self, first_node=None):
-        self.first_node = first_node
+    def __init__(self, first_value=None):
+        self.first_node = first_value is not None and Node(first_value) or None
         self._reset_for_iteration()
 
-    def append(self, node):
+    def append(self, value):
+        node = Node(value)
         last_node = None
         for last_node, _, _ in self:
             pass
@@ -12,12 +13,14 @@ class SinglyLinkedList:
         else:
             last_node.next = node
 
-    def prepend(self, node):
+    def prepend(self, value):
+        node = Node(value)
         previous_first_node = self.first_node
         self.first_node = node
         node.next = previous_first_node
 
-    def insert(self, node_to_insert, at_index):
+    def insert(self, value, at_index):
+        node_to_insert = Node(value)
         if at_index == 0:
             node_to_insert.next = self.first_node
             self.first_node = node_to_insert
@@ -71,6 +74,12 @@ class SinglyLinkedList:
 
         self._index += 1
         return (self._current_node, self._previous_node, self._index)
+
+    def __getitem__(self, at_index):
+        for node, _, index in self:
+            if index == at_index:
+                return node.value
+        raise IndexError("linked list index out of range")
 
     def as_list_of_values(self):
         return [node.value for node, _, _ in self]
