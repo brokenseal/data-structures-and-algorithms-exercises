@@ -81,11 +81,34 @@ class SinglyLinkedList:
                 return node.value
         raise IndexError("linked list index out of range")
 
-    def as_list_of_values(self):
+    def __setitem__(self, at_index, value):
+        if self.first_node is None and at_index == 0:
+            self.first_node = Node(value)
+            return
+
+        length = 0
+        for node, previous_node, index in self:
+            length += 1
+            if index != at_index:
+                continue
+
+            node_to_add = Node(value)
+            if previous_node is None:
+                self.first_node = node_to_add
+            if previous_node is not None:
+                previous_node.set_next(node_to_add)
+            node_to_add.set_next(node.next)
+            return
+        if length == at_index:
+            self.append(value)
+            return
+        raise IndexError("linked list assignment index out of range")
+
+    def as_list(self):
         return [node.value for node, _, _ in self]
 
     def __eq__(self, cmp):
-        return isinstance(cmp, self.__class__) and self.as_list_of_values() == cmp.as_list_of_values()
+        return isinstance(cmp, self.__class__) and self.as_list() == cmp.as_list()
 
 
 class Node:

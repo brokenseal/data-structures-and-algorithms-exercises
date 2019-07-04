@@ -48,7 +48,7 @@ class DoublyLinkedList:
         else:
             raise ValueError()
 
-    def as_list_of_values(self):
+    def as_list(self):
         return [node.value for node, _ in self]
 
     def __iter__(self):

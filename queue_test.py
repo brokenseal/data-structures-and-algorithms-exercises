@@ -9,7 +9,7 @@ class QueueTest(TestCase):
         queue = self.QueueClass(5)
         queue.enqueue(10)
 
-        self.assertEqual(queue.as_list_of_values(), [10])
+        self.assertEqual(queue.as_list(), [10])
 
     def test_enqueues_multiple_values(self):
         queue = self.QueueClass(5)
@@ -17,7 +17,7 @@ class QueueTest(TestCase):
         queue.enqueue(20)
         queue.enqueue(30)
 
-        self.assertEqual(queue.as_list_of_values(), [10, 20, 30])
+        self.assertEqual(queue.as_list(), [10, 20, 30])
 
     def test_enqueue_raises_when_queue_is_empty(self):
         queue = self.QueueClass(5)
@@ -36,7 +36,7 @@ class QueueTest(TestCase):
         value = queue.dequeue()
 
         self.assertEqual(value, 10)
-        self.assertEqual(queue.as_list_of_values(), [])
+        self.assertEqual(queue.as_list(), [])
 
     def test_dequeues_multiple_values(self):
         queue = self.QueueClass(5)
@@ -47,7 +47,7 @@ class QueueTest(TestCase):
         value = queue.dequeue()
 
         self.assertEqual(value, 20)
-        self.assertEqual(queue.as_list_of_values(), [30])
+        self.assertEqual(queue.as_list(), [30])
 
     def test_dequeue_raises_when_queue_is_empty(self):
         queue = self.QueueClass(5)
@@ -69,7 +69,7 @@ class QueueTest(TestCase):
         with self.assertRaises(ValueError):
             queue.enqueue(30)
 
-        self.assertEqual(queue.as_list_of_values(), [10, 20, 30])
+        self.assertEqual(queue.as_list(), [10, 20, 30])
 
 
 class ArrayQueueTest(QueueTest):
@@ -85,4 +85,4 @@ class PriorityQueueTest(QueueTest):
         queue.enqueue(20)
         queue.enqueue(1)
 
-        self.assertEqual(queue.as_list_of_values(), [1, 10, 20])
+        self.assertEqual(queue.as_list(), [1, 10, 20])

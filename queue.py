@@ -22,8 +22,8 @@ class SinglyLinkedListQueue:
     def increase_max_length(self):
         self._max_length += 1
 
-    def as_list_of_values(self):
-        return self._queue.as_list_of_values()
+    def as_list(self):
+        return self._queue.as_list()
 
 
 class ArrayQueue:
@@ -46,7 +46,7 @@ class ArrayQueue:
     def increase_max_length(self):
         self._max_length += 1
 
-    def as_list_of_values(self):
+    def as_list(self):
         return [value for value in self._queue]
 
 

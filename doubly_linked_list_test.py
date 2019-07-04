@@ -41,7 +41,7 @@ class DoublyLinkedTestCase(TestCase):
         linked = get_simple_instance()
         linked.append(Node(200))
 
-        self.assertEqual(linked.as_list_of_values(), [100, 200])
+        self.assertEqual(linked.as_list(), [100, 200])
 
     def test_append_adds_next(self):
         linked = get_simple_instance()
@@ -62,7 +62,7 @@ class DoublyLinkedTestCase(TestCase):
         second_node = Node(1000)
         linked.insert(second_node, 2)
 
-        self.assertEqual(linked.as_list_of_values(),
+        self.assertEqual(linked.as_list(),
                          [100, 200, 1000, 300, 400])
 
     def test_insert_at_the_beginning(self):
@@ -70,7 +70,7 @@ class DoublyLinkedTestCase(TestCase):
         second_node = Node(1000)
         linked.insert(second_node, 0)
 
-        self.assertEqual(linked.as_list_of_values(),
+        self.assertEqual(linked.as_list(),
                          [1000, 100, 200, 300, 400])
 
     def test_insert_at_position_one(self):
@@ -78,7 +78,7 @@ class DoublyLinkedTestCase(TestCase):
         second_node = Node(1000)
         linked.insert(second_node, 1)
 
-        self.assertEqual(linked.as_list_of_values(),
+        self.assertEqual(linked.as_list(),
                          [100, 1000, 200, 300, 400])
 
     def test_insert_at_the_end(self):
@@ -86,7 +86,7 @@ class DoublyLinkedTestCase(TestCase):
         second_node = Node(1000)
         linked.insert(second_node, 3)
 
-        self.assertEqual(linked.as_list_of_values(),
+        self.assertEqual(linked.as_list(),
                          [100, 200, 300, 1000, 400])
 
     def test_raises_if_index_is_too_high(self):
@@ -114,25 +114,25 @@ class DoublyLinkedTestCase(TestCase):
         linked = get_instance()
         linked.remove(2)
 
-        self.assertEqual(linked.as_list_of_values(), [100, 200, 400])
+        self.assertEqual(linked.as_list(), [100, 200, 400])
 
     def test_remove_at_beginning(self):
         linked = get_instance()
         linked.remove(0)
 
-        self.assertEqual(linked.as_list_of_values(), [200, 300, 400])
+        self.assertEqual(linked.as_list(), [200, 300, 400])
 
     def test_remove_at_end(self):
         linked = get_instance()
         linked.remove(3)
 
-        self.assertEqual(linked.as_list_of_values(), [100, 200, 300])
+        self.assertEqual(linked.as_list(), [100, 200, 300])
 
     def test_remove_from_single_element_list(self):
         linked = get_simple_instance()
         linked.remove(0)
 
-        self.assertEqual(linked.as_list_of_values(), [])
+        self.assertEqual(linked.as_list(), [])
 
     def test_remove_raises_if_index_is_too_high(self):
         linked = get_instance()
@@ -158,7 +158,7 @@ class DoublyLinkedTestCase(TestCase):
         linked = DoublyLinkedList(first_node)
         linked.prepend(node)
 
-        self.assertEqual(linked.as_list_of_values(), [1000, 100])
+        self.assertEqual(linked.as_list(), [1000, 100])
         self.assertIs(linked.first_node, node)
         self.assertIs(linked.first_node.next, first_node)
         self.assertIs(first_node.previous, node)
@@ -168,7 +168,7 @@ class DoublyLinkedTestCase(TestCase):
         node = Node(1000)
         linked.prepend(node)
 
-        self.assertEqual(linked.as_list_of_values(), [1000])
+        self.assertEqual(linked.as_list(), [1000])
         self.assertIs(linked.first_node, node)
         self.assertIs(linked.first_node.next, None)
         self.assertIs(linked.first_node.previous, None)
