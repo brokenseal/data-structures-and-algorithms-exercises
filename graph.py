@@ -37,21 +37,39 @@ class Graph:
     def breadth_first_search(self, starting_vertex):
         adjency_list = self.as_adjency_list()
         current_vertexes = [starting_vertex]
-        visited = []
+        result = []
 
         while len(current_vertexes) != 0:
             for vertex in current_vertexes:
-                if vertex not in visited:
-                    visited.append(vertex)
+                result.append(vertex)
 
             next_vertexes_to_visit = []
             for vertex in current_vertexes:
                 for vertex_to_visit in adjency_list[vertex]:
                     if vertex_to_visit not in next_vertexes_to_visit \
-                            and vertex_to_visit not in visited:
+                            and vertex_to_visit not in result:
                         next_vertexes_to_visit.append(vertex_to_visit)
             current_vertexes = next_vertexes_to_visit
-        return visited
+        return result
+
+    def depth_first_search(self, starting_vertex):
+        visited = [starting_vertex]
+        adjency_list = self.as_adjency_list()
+        return self._dfs_visit(starting_vertex, adjency_list, visited)
+
+    def _dfs_visit(self, starting_vertex, adjency_list, visited):
+        visited.append(starting_vertex)
+        result = [starting_vertex]
+        adjacent_vertexes = adjency_list[starting_vertex]
+
+        for vertex in adjacent_vertexes:
+            if vertex in visited:
+                continue
+            result_from_adjacent_vertex = self._dfs_visit(
+                vertex, adjency_list, visited)
+            result.extend(result_from_adjacent_vertex)
+            visited.extend(result)
+        return result
 
 
 # if __name__ == "__main__":
@@ -62,7 +80,7 @@ class Graph:
 #     graph.add_directed_edge(2, 0)
 #     graph.add_directed_edge(2, 3)
 
-#     result = graph.breadth_first_search(0)
+#     result = graph.depth_first_search(0)
 #     print("------------------------------------------------")
 #     print(result)
 #     print("------------------------------------------------")

@@ -121,6 +121,43 @@ class BreadthFirstSearchTestCase(TestCase):
         self.assertEqual(graph.breadth_first_search("C"),
                          ["C", "B", "A", "D", "E"])
 
+    def test_depth_first_search(self):
+        graph = Graph()
+        graph.add_edge(0, 1)
+        graph.add_edge(0, 2)
+        graph.add_edge(1, 2)
+        graph.add_edge(2, 0)
+        graph.add_edge(2, 3)
+
+        self.assertEqual(graph.depth_first_search(0), [0, 1, 2, 3])
+
+    def test_depth_first_search_with_letters(self):
+        graph = Graph()
+        graph.add_edge("A", "B")
+        graph.add_edge("B", "C")
+        graph.add_edge("C", "A")
+        graph.add_edge("C", "D")
+        graph.add_edge("D", "E")
+        graph.add_edge("B", "F")
+        graph.add_edge("F", "G")
+        graph.add_edge("G", "H")
+        graph.add_edge("G", "I")
+
+        self.assertEqual(
+            graph.as_adjency_list(), {
+                "A": ["B", "C"],
+                "B": ["A", "C", "F"],
+                "C": ["B", "A", "D"],
+                "D": ["C", "E"],
+                "E": ["D"],
+                "F": ["B", "G"],
+                "G": ["F", "H", "I"],
+                "H": ["G"],
+                "I": ["G"]
+            })
+        self.assertEqual(graph.depth_first_search("A"),
+                         ["A", "B", "C", "D", "E", "F", "G", "H", "I"])
+
 
 if __name__ == "__main__":
     main()
