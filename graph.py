@@ -1,9 +1,12 @@
+import math
+
 from linked_list import SinglyLinkedList
 
 
 class Graph:
     def __init__(self):
         self._adjency_list = {}
+        self._weights = {}
 
     @property
     def vertex_count(self):
@@ -13,26 +16,31 @@ class Graph:
     def vertexes(self):
         return list(self._adjency_list.keys())
 
-    def as_adjency_list(self):
+    def as_adjency_list(self, values_only=True):
+        if values_only:
+            return {
+                vertex: [edge.vertex for edge in edges]
+                for vertex, edges in self._adjency_list.items()
+            }
         return {
-            vertex: children.as_list()
-            for vertex, children in self._adjency_list.items()
+            vertex: edges
+            for vertex, edges in self._adjency_list.items()
         }
 
-    def add_edge(self, source, destination):
+    def add_edge(self, source, destination, weight=None):
         self._prepare_vertexes(source, destination)
-        self._adjency_list[source].append(destination)
-        self._adjency_list[destination].append(source)
+        self._adjency_list[source].append(Edge(destination, weight))
+        self._adjency_list[destination].append(Edge(source, weight))
 
-    def add_directed_edge(self, source, destination):
+    def add_directed_edge(self, source, destination, weight=None):
         self._prepare_vertexes(source, destination)
-        self._adjency_list[source].append(destination)
+        self._adjency_list[source].append(Edge(destination, weight))
 
     def _prepare_vertexes(self, source, destination):
         if source not in self._adjency_list:
-            self._adjency_list[source] = SinglyLinkedList()
+            self._adjency_list[source] = []
         if destination not in self._adjency_list:
-            self._adjency_list[destination] = SinglyLinkedList()
+            self._adjency_list[destination] = []
 
     def breadth_first_search(self, starting_vertex):
         adjency_list = self.as_adjency_list()
@@ -46,6 +54,7 @@ class Graph:
             next_vertexes_to_visit = []
             for vertex in current_vertexes:
                 for vertex_to_visit in adjency_list[vertex]:
+                    #vertex_to_visit = edge.vertex
                     if vertex_to_visit not in next_vertexes_to_visit \
                             and vertex_to_visit not in result:
                         next_vertexes_to_visit.append(vertex_to_visit)
@@ -53,7 +62,7 @@ class Graph:
         return result
 
     def depth_first_search(self, starting_vertex):
-        visited = [starting_vertex]
+        visited = []
         adjency_list = self.as_adjency_list()
         return self._dfs_visit(starting_vertex, adjency_list, visited)
 
@@ -62,25 +71,66 @@ class Graph:
         result = [starting_vertex]
         adjacent_vertexes = adjency_list[starting_vertex]
 
-        for vertex in adjacent_vertexes:
-            if vertex in visited:
+        for edge in adjacent_vertexes:
+            if edge in visited:
                 continue
             result_from_adjacent_vertex = self._dfs_visit(
-                vertex, adjency_list, visited)
+                edge, adjency_list, visited)
             result.extend(result_from_adjacent_vertex)
-            visited.extend(result)
+            visited.extend(result_from_adjacent_vertex)
         return result
 
 
-# if __name__ == "__main__":
-#     graph = Graph()
-#     graph.add_directed_edge(0, 1)
-#     graph.add_directed_edge(0, 2)
-#     graph.add_directed_edge(1, 2)
-#     graph.add_directed_edge(2, 0)
-#     graph.add_directed_edge(2, 3)
+class Edge:
+    def __init__(self, vertex, weight=None):
+        self.vertex = vertex
+        self.weight = weight
 
-#     result = graph.depth_first_search(0)
-#     print("------------------------------------------------")
-#     print(result)
-#     print("------------------------------------------------")
+    def __eq__(self, cmp):
+        return self.vertex == cmp.vertex and self.weight == cmp.weight
+
+    def __gt__(self, cmp):
+        return self.weight > cmp
+
+    def __lt__(self, cmp):
+        return self.weight < cmp
+
+
+# Work in progress
+class DijkstraPathSearchEngine:
+    def __init__(self, graph):
+        self.graph = graph
+
+    def get_matrix(self, start, end):
+        visited = []
+        matrix = {}
+        adjency_list = self.graph.as_adjency_list(False)
+
+        def should_visit(edges):
+            not_visited = [
+                edge for edge in edges if edge.vertex not in visited]
+            sorted_edges = sorted(not_visited)
+
+            if len(sorted_edges) == 0:
+                return None
+            return sorted_edges[0]
+
+        def visit(vertex, weight, previous_vertex):
+            visited.append(vertex)
+            neighbours = adjency_list[vertex]
+            next_edge = should_visit(neighbours)
+            if next_edge is None:
+                return
+            if vertex not in matrix:
+                #distance = 0
+                # if previous_vertex is not None:
+                    #distance = math.inf
+                    #distance = weight
+                matrix[vertex] = (weight, previous_vertex,)
+            else:
+                distance_to_start, _ = matrix[vertex]
+                distance_to_start = distance_to_start + weight  # next_edge.weight
+            visit(next_edge.vertex, next_edge.weight, vertex)
+
+        visit(start, 0, None)
+        return matrix

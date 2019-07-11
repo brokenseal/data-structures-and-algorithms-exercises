@@ -1,5 +1,6 @@
-from unittest import TestCase, main
-from graph import Graph
+from unittest import TestCase, main, skip
+
+from graph import Graph, Edge, DijkstraPathSearchEngine
 
 
 class TestGraph(TestCase):
@@ -157,6 +158,46 @@ class BreadthFirstSearchTestCase(TestCase):
             })
         self.assertEqual(graph.depth_first_search("A"),
                          ["A", "B", "C", "D", "E", "F", "G", "H", "I"])
+
+    def test_weighted_edge(self):
+        graph = Graph()
+        graph.add_edge("A", "B", 3)
+
+        self.assertEqual(graph.as_adjency_list(values_only=False), {
+            "A": [Edge("B", 3)],
+            "B": [Edge("A", 3)],
+        })
+
+    def test_weighted_directed_edge(self):
+        graph = Graph()
+        graph.add_directed_edge("A", "B", 2)
+
+        self.assertEqual(graph.as_adjency_list(values_only=False), {
+            "A": [Edge("B", 2)],
+            "B": []
+        })
+
+
+class DijkstraPathAlgorithmTestCase(TestCase):
+    @skip
+    def test_matrix_creation(self):
+        graph = Graph()
+        graph.add_edge("A", "B", 7)
+        graph.add_edge("A", "C", 3)
+        graph.add_edge("C", "B", 1)
+        graph.add_edge("C", "D", 2)
+        graph.add_edge("B", "E", 6)
+        graph.add_edge("B", "D", 2)
+        graph.add_edge("D", "E", 4)
+        search_engine = DijkstraPathSearchEngine(graph)
+
+        self.assertEqual(search_engine.get_matrix("A", "E"), {
+            "A": (0, None),
+            "B": (4, "C"),
+            "C": (3, "A"),
+            "D": (5, "C"),
+            "E": (9, "D"),
+        })
 
 
 if __name__ == "__main__":
