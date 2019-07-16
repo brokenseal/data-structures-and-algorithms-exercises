@@ -1,18 +1,16 @@
-def binary_search(arr, value_to_search):
-    current = sorted(arr)
-    length = len(current)
-    iterations_count = 0
+def binary_search(current, value_to_search):
+    min_index = 0
+    max_index = len(current) - 1
 
-    while length != 0:
-        iterations_count += 1
-        mid_index = int(length / 2)
+    while min_index <= max_index:
+        mid_index = min_index + int((max_index-min_index) / 2)
         mid_value = current[mid_index]
 
         if mid_value == value_to_search:
-            return True, iterations_count
-        elif mid_value < value_to_search:
-            current = current[mid_index+1:]
+            return mid_index
+
+        if mid_value < value_to_search:
+            min_index = mid_index+1
         else:
-            current = current[:mid_index]
-        length = len(current)
-    return False, iterations_count
+            max_index = mid_index-1
+    return -1
